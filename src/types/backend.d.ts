@@ -13,8 +13,6 @@ declare global {
     }
 
     interface IBackendRes<T> {
-        user: any;
-        access_token: any;
         error?: string | string[];
         message: string;
         statusCode: number | string;
