@@ -1,10 +1,9 @@
-'use client'
-const ManageProduct = () => {
+const ManageProductPage = () => {
     return (
         <div>
-            ManageProduct
+            ManageProductPage page
         </div>
     )
 }
 
-export default ManageProduct;
+export default ManageProductPage;

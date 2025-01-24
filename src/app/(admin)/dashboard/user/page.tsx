@@ -1,8 +1,9 @@
-'use client'
+import UserTable from "@/components/admin/user.table";
+
 const ManageUserPage = () => {
     return (
         <div>
-            ManageUserPage
+            <UserTable />
         </div>
     )
 }

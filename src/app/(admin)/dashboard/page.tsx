@@ -1,14 +1,19 @@
-'use client'
-import React, { useState } from 'react';
 
+import AdminCard from "@/components/admin/admin.card";
 
 const DashboardPage = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  return (
-   <>
-    <div>hello</div>
-   </>
-  );
-};
+
+    return (
+        <div>
+            <AdminCard />
+        </div>
+    )
+}
 
 export default DashboardPage;
+
+
+
+
+
+
