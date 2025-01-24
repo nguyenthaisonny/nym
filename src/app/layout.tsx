@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { Inter } from "next/font/google";
 
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,8 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        {children}
+      <body className={inter.className}>
+        <AntdRegistry>
+          {children}
+        </AntdRegistry>
       </body>
     </html>
   );
