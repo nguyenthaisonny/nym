@@ -10,8 +10,6 @@ const Login = () => {
     const onFinish = async (values: any) => {
         const {email, password} = values
         const res = await authenticate(email, password)
-        console.log(res);
-        
         
     };
 

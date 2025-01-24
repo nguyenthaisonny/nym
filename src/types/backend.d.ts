@@ -13,6 +13,8 @@ declare global {
     }
 
     interface IBackendRes<T> {
+        user: any;
+        access_token: any;
         error?: string | string[];
         message: string;
         statusCode: number | string;
@@ -27,6 +29,17 @@ declare global {
             total: number;
         },
         result: T[]
+    }
+
+
+    interface UserResLogin {
+        _id: string;
+        name: string;
+        email: string;
+    }
+    interface ILogin {
+        user: UserResLogin
+        access_token
     }
 
 }
