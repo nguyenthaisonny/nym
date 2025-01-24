@@ -22,7 +22,7 @@ const AdminSideBar = () => {
 
         {
             key: 'grp',
-            label: 'Hỏi Dân IT',
+            label: 'nym-application',
             type: 'group',
             children: [
                 {
@@ -103,6 +103,7 @@ const AdminSideBar = () => {
             <Menu
                 mode="inline"
                 defaultSelectedKeys={['dashboard']}
+                theme="dark"
                 items={items}
                 style={{ height: '100vh' }}
             />
