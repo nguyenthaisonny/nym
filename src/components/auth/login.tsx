@@ -5,10 +5,14 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { authenticate } from '@/utils/actions';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { sendRequest } from '@/utils/api';
 
 const Login = () => {
     const router = useRouter()
+    const [loading, setLoading] = useState(false);
     const onFinish = async (values: any) => {
+        setLoading(true)
         const {email, password} = values
         const res = await authenticate(email, password)
         if(res?.error) {
@@ -16,15 +20,31 @@ const Login = () => {
                 message: "Error Login",
                 description: res.error
             })
-        if(res?.code === 2) {
-            router.push('/verify')
-        }
+            if(res?.code === 2) {
+                const res = await sendRequest<IBackendRes<ResendCodeRes>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/resend-code`,
+                    method: 'POST',
+                    body: {
+                        email
+                    }
+                })
+                if(res.statusCode !== 201) {
+                    notification.error({
+                        message: "Error to regenerate active code",
+                        description: res.error
+                    })
+                }
+                router.push(`/verify/${res?.data?.user?._id}`)
+            }
+            setLoading(false)
             return
         }
-
+        notification.success({
+            message: "Login successfully",
+            description: res.error
+        })
         router.push('/dashboard')
-        
-        
+        // setLoading(false)
     };
 
     return (
@@ -69,11 +89,9 @@ const Login = () => {
                             <Input.Password />
                         </Form.Item>
 
-
-
                         <Form.Item
                         >
-                            <Button type="primary" htmlType="submit">
+                            <Button loading={loading} type="primary" htmlType="submit">
                                 Login
                             </Button>
                         </Form.Item>

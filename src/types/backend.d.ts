@@ -35,9 +35,26 @@ declare global {
         name: string;
         email: string;
     }
+    interface UserResRegister {
+        _id: string;
+        name: string;
+        email: string;
+    }
     interface ILogin {
         user: UserResLogin
-        access_token
+        access_token: string
     }
 
+    interface IRegister {
+        user: UserResRegister
+        access_token: string
+    }
+
+    interface ResendCodeRes {
+        user: {
+            _id: string
+            codeId: string
+        }
+    }
 }
+

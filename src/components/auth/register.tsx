@@ -1,13 +1,35 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Divider, Form, Input, notification, Row } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { sendRequest } from '@/utils/api';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
-
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
     const onFinish = async (values: any) => {
-
+        setLoading(true)
+        const {name, email, password} = values
+        const res = await sendRequest<IBackendRes<IRegister>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
+            method: 'POST',
+            body: {
+                name, email, password
+            }
+        })
+        if(res?.data) {
+            router.push(`/verify/${res?.data?.user?._id}`)
+            setLoading(false)
+            return
+        }
+        setLoading(false)
+        notification.error({
+            message: "Register error",
+            description: res?.message
+        })
+        
     };
 
     return (
@@ -61,7 +83,7 @@ const Register = () => {
 
                         <Form.Item
                         >
-                            <Button type="primary" htmlType="submit">
+                            <Button loading={loading} type="primary" htmlType="submit">
                                 Submit
                             </Button>
                         </Form.Item>
