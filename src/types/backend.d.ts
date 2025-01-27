@@ -20,15 +20,24 @@ declare global {
     }
 
     interface IModelPaginate<T> {
-        meta: {
-            current: number;
-            pageSize: number;
-            pages: number;
-            total: number;
-        },
-        result: T[]
+        meta: MetaPagnigate,
+        results: T[]
     }
 
+    interface ResultPagnigate {
+        name?: string,
+        email?: string,
+        role?: string,
+        phone?: string
+        address?: string
+    }
+
+    interface MetaPagnigate {
+        current: number;
+        pageSize: number;
+        pages: number;
+        total: number;
+    }
 
     interface UserResLogin {
         _id: string;

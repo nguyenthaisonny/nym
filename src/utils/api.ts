@@ -12,34 +12,29 @@ export const sendRequest = async <T>(props: IRequest): Promise<T> => {
         nextOption = {}
     } = props;
 
-    // Combine headers and credentials
-    const options: AxiosRequestConfig = {
-        method,
-        url: queryParams ? `${url}?${queryString.stringify(queryParams)}` : url,
-        data: body || null,
-        headers: {
-            'Content-Type': 'application/json',
-            ...headers,
-        },
-        withCredentials: useCredentials, // Automatically handles cookies if true
-        ...nextOption,
+    // Setting up axios config
+    const config: AxiosRequestConfig = {
+        method: method,
+        headers: { 'Content-Type': 'application/json', ...headers },
+        params: queryParams, // automatically handles query params
+        withCredentials: useCredentials,
+        ...nextOption
     };
 
+    if (body) {
+        config.data = body;
+    }
+
     try {
-        const response = await axios.request<T>(options);
-        return response.data; // Automatically parsed
+        const response = await axios(url, config);
+        return response.data as T;
     } catch (error: any) {
-        // Handle errors and return custom error structure
-        if (error.response) {
-            const { status, data } = error.response;
-            return {
-                statusCode: status,
-                message: data?.message || "",
-                error: data?.error || "",
-            } as T;
-        } else {
-            throw new Error(error.message);
-        }
+        const errResponse = error.response;
+        return {
+            statusCode: errResponse?.status,
+            message: errResponse?.data?.message ?? '',
+            error: errResponse?.data?.error ?? ''
+        } as T;
     }
 };
 
@@ -54,30 +49,28 @@ export const sendRequestFile = async <T>(props: IRequest): Promise<T> => {
         nextOption = {}
     } = props;
 
-    const options: AxiosRequestConfig = {
-        method,
-        url: queryParams ? `${url}?${queryString.stringify(queryParams)}` : url,
-        data: body || null,
-        headers: {
-            ...headers, // No default content type for file uploads
-        },
+    // Setting up axios config for file upload
+    const config: AxiosRequestConfig = {
+        method: method,
+        headers: { ...headers },
+        params: queryParams, // automatically handles query params
         withCredentials: useCredentials,
-        ...nextOption,
+        ...nextOption
     };
 
+    if (body) {
+        config.data = body; // For files, body should be FormData or similar
+    }
+
     try {
-        const response = await axios.request<T>(options);
-        return response.data;
+        const response = await axios(url, config);
+        return response.data as T;
     } catch (error: any) {
-        if (error.response) {
-            const { status, data } = error.response;
-            return {
-                statusCode: status,
-                message: data?.message || "",
-                error: data?.error || "",
-            } as T;
-        } else {
-            throw new Error(error.message);
-        }
+        const errResponse = error.response;
+        return {
+            statusCode: errResponse?.status,
+            message: errResponse?.data?.message ?? '',
+            error: errResponse?.data?.error ?? ''
+        } as T;
     }
 };
