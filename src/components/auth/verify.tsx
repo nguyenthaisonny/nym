@@ -49,9 +49,9 @@ id: string
                     padding: "15px",
                     margin: "5px",
                     border: "1px solid #ccc",
-                    borderRadius: "5px"
+                    borderRadius: "5px",
+                    background: "rgba(255, 255, 255, 0.9)",
                 }}>
-                    <legend>Verify</legend>
                     <Form
                         name="basic"
                         onFinish={onFinish}

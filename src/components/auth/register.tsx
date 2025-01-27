@@ -39,9 +39,12 @@ const Register = () => {
                     padding: "15px",
                     margin: "5px",
                     border: "1px solid #ccc",
-                    borderRadius: "5px"
+                    borderRadius: "5px",
+                    background: "rgba(255, 255, 255, 0.9)",
                 }}>
-                    <legend>Register</legend>
+                    <div style={{ display: 'flex', justifyContent: 'center'}}>
+                        <h1>Register</h1>
+                    </div>
                     <Form
                         name="basic"
                         onFinish={onFinish}

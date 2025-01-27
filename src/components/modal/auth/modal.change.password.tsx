@@ -5,22 +5,25 @@ import { Button, Form, Input, Modal, notification, Steps } from "antd";
 import { SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { sendRequest } from "@/utils/api";
-
-const ModalChangePassword = (props: any) => {
-    const { isModalOpen, setIsModalOpen } = props;
+interface ModalReactiveProps {
+    isModalOpen: boolean
+    setIsModalOpen: (status: boolean) => void
+}
+const ModalChangePassword = ({ isModalOpen, setIsModalOpen }: ModalReactiveProps) => {
     const [current, setCurrent] = useState(0);
     const [form] = Form.useForm();
     const [userId, setUserId] = useState("");
-
+    const [loading, setloading] = useState(false)
     const hasMounted = useHasMounted();
 
 
     if (!hasMounted) return <></>;
 
     const onFinishStep0 = async (values: any) => {
+        setloading(true)
         const { email } = values;
         const res = await sendRequest<IBackendRes<ResendCodeRes>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/retry-active`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/retry-password`,
             method: "POST",
             body: {
                 email
@@ -35,17 +38,19 @@ const ModalChangePassword = (props: any) => {
                 description: res?.message
             })
         }
-
+        setloading(false)
     }
 
     const onFinishStep1 = async (values: any) => {
-        const { code } = values;
+        setloading(true)
+        const { code, password } = values;
          const res = await sendRequest<IBackendRes<any>>({
-                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/check-code`,
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/forgot-password`,
                 method: 'POST',
                 body: {
                     _id: userId,
-                    code
+                    code,
+                    newPassword: password
                 }
             })
         if (res?.data) {
@@ -56,15 +61,18 @@ const ModalChangePassword = (props: any) => {
                 description: res?.message
             })
         }
-
+        setloading(false)
+    }
+    const handleCancel = () => {
+        if(current === 2) setCurrent(0)
+        setIsModalOpen(false)
     }
     return (
         <>
             <Modal
-                title="Quên mật khẩu"
+                title="Forgot Password"
                 open={isModalOpen}
-                onOk={() => setIsModalOpen(false)}
-                onCancel={() => setIsModalOpen(false)}
+                onCancel={handleCancel}
                 maskClosable={false}
                 footer={null}
             >
@@ -93,7 +101,7 @@ const ModalChangePassword = (props: any) => {
                     <>
 
                         <div style={{ margin: "20px 0" }}>
-                            <p>Để thực hiện thay đổi mật khẩu, vui lòng nhập email tài khoản của bạn.</p>
+                            <p>In order to recover your password please type your email</p>
                         </div>
                         <Form
                             name="change-password"
@@ -110,7 +118,7 @@ const ModalChangePassword = (props: any) => {
                             </Form.Item>
                             <Form.Item
                             >
-                                <Button type="primary" htmlType="submit">
+                                <Button loading={loading} type="primary" htmlType="submit">
                                     Submit
                                 </Button>
                             </Form.Item>
@@ -121,7 +129,7 @@ const ModalChangePassword = (props: any) => {
                 {current === 1 &&
                     <>
                         <div style={{ margin: "20px 0" }}>
-                            <p>Vui lòng thực hiện đổi mật khẩu</p>
+                            <p>Please update your new password</p>
                         </div>
 
                         <Form
@@ -129,7 +137,6 @@ const ModalChangePassword = (props: any) => {
                             onFinish={onFinishStep1}
                             autoComplete="off"
                             layout='vertical'
-
                         >
                             <Form.Item
                                 label="Code"
@@ -145,34 +152,46 @@ const ModalChangePassword = (props: any) => {
                             </Form.Item>
 
                             <Form.Item
-                                label="Mật khẩu mới"
                                 name="password"
+                                label="Password"
                                 rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your new password!',
-                                    },
+                                {
+                                    required: true,
+                                    message: 'Please input your password!',
+                                },
                                 ]}
+                                hasFeedback
                             >
                                 <Input.Password />
                             </Form.Item>
 
                             <Form.Item
-                                label="Xác nhận mật khẩu"
-                                name="confirmPassword"
+                                name="confirm"
+                                label="Confirm Password"
+                                dependencies={['password']}
+                                hasFeedback
                                 rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your new password!',
+                                {
+                                    required: true,
+                                    message: 'Please confirm your password!',
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                    if (!value || getFieldValue('password') === value) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error('The new password that you entered do not match!'));
                                     },
+                                }),
                                 ]}
                             >
                                 <Input.Password />
                             </Form.Item>
 
+
                             <Form.Item
                             >
-                                <Button type="primary" htmlType="submit">
+                                <Button loading={loading} type="primary" htmlType="submit">
                                     Confirm
                                 </Button>
                             </Form.Item>
@@ -182,7 +201,7 @@ const ModalChangePassword = (props: any) => {
 
                 {current === 2 &&
                     <div style={{ margin: "20px 0" }}>
-                        <p>Tải khoản của bạn đã được thay đổi mật khẩu thành công. Vui lòng đăng nhập lại</p>
+                        <p>Your password has been changed successfully. Please login again!</p>
                     </div>
                 }
             </Modal>
