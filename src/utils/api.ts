@@ -1,7 +1,8 @@
+import axios, { AxiosRequestConfig } from 'axios';
 import queryString from 'query-string';
 
-export const sendRequest = async <T>(props: IRequest) => { //type
-    let {
+export const sendRequest = async <T>(props: IRequest): Promise<T> => {
+    const {
         url,
         method,
         body,
@@ -11,37 +12,39 @@ export const sendRequest = async <T>(props: IRequest) => { //type
         nextOption = {}
     } = props;
 
-    const options: any = {
-        method: method,
-        // by default setting the content-type to be json type
-        headers: new Headers({ 'content-type': 'application/json', ...headers }),
-        body: body ? JSON.stringify(body) : null,
-        ...nextOption
+    // Combine headers and credentials
+    const options: AxiosRequestConfig = {
+        method,
+        url: queryParams ? `${url}?${queryString.stringify(queryParams)}` : url,
+        data: body || null,
+        headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+        },
+        withCredentials: useCredentials, // Automatically handles cookies if true
+        ...nextOption,
     };
-    if (useCredentials) options.credentials = "include";
 
-    if (queryParams) {
-        url = `${url}?${queryString.stringify(queryParams)}`;
-    }
-
-    return fetch(url, options).then(res => {
-        if (res.ok) {
-            return res.json() as T; //generic
+    try {
+        const response = await axios.request<T>(options);
+        return response.data; // Automatically parsed
+    } catch (error: any) {
+        // Handle errors and return custom error structure
+        if (error.response) {
+            const { status, data } = error.response;
+            return {
+                statusCode: status,
+                message: data?.message || "",
+                error: data?.error || "",
+            } as T;
         } else {
-            return res.json().then(function (json) {
-                // to be able to access error status when you catch the error 
-                return {
-                    statusCode: res.status,
-                    message: json?.message ?? "",
-                    error: json?.error ?? ""
-                } as T;
-            });
+            throw new Error(error.message);
         }
-    });
+    }
 };
 
-export const sendRequestFile = async <T>(props: IRequest) => { //type
-    let {
+export const sendRequestFile = async <T>(props: IRequest): Promise<T> => {
+    const {
         url,
         method,
         body,
@@ -51,31 +54,30 @@ export const sendRequestFile = async <T>(props: IRequest) => { //type
         nextOption = {}
     } = props;
 
-    const options: any = {
-        method: method,
-        // by default setting the content-type to be json type
-        headers: new Headers({ ...headers }),
-        body: body ? body : null,
-        ...nextOption
+    const options: AxiosRequestConfig = {
+        method,
+        url: queryParams ? `${url}?${queryString.stringify(queryParams)}` : url,
+        data: body || null,
+        headers: {
+            ...headers, // No default content type for file uploads
+        },
+        withCredentials: useCredentials,
+        ...nextOption,
     };
-    if (useCredentials) options.credentials = "include";
 
-    if (queryParams) {
-        url = `${url}?${queryString.stringify(queryParams)}`;
-    }
-
-    return fetch(url, options).then(res => {
-        if (res.ok) {
-            return res.json() as T; //generic
+    try {
+        const response = await axios.request<T>(options);
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            const { status, data } = error.response;
+            return {
+                statusCode: status,
+                message: data?.message || "",
+                error: data?.error || "",
+            } as T;
         } else {
-            return res.json().then(function (json) {
-                // to be able to access error status when you catch the error 
-                return {
-                    statusCode: res.status,
-                    message: json?.message ?? "",
-                    error: json?.error ?? ""
-                } as T;
-            });
+            throw new Error(error.message);
         }
-    });
+    }
 };

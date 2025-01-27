@@ -7,10 +7,47 @@ import { authenticate } from '@/utils/actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { sendRequest } from '@/utils/api';
+import BaseModal from '../modal/BaseModal';
+import ModalReactive from '../modal/modal.reactive';
 
 const Login = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
+    const [isOpenActiveModal, setIsOpenActiveModal] = useState(false)
+    const [userEmail, setUserEmail] = useState('')
+    // const items: itemInput[] = [
+    //     {
+    //         name: 'email',
+    //         label: 'Email',
+    //         rules: [
+    //             {
+    //                 required: true,
+    //                 message: 'Please input your email!',
+    //             },
+    //         ]
+    //     }
+    // ]
+    const handleOpenActiveModal = (status: boolean) => {
+        setLoading(false)
+        setIsOpenActiveModal(status)
+    }
+    // const handleResendCode = async ({email}: {email: string}) => {
+    //     const res = await sendRequest<IBackendRes<ResendCodeRes>>({
+    //         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/resend-code`,
+    //         method: 'POST',
+    //         body: {
+    //             email
+    //         }
+    //     })
+    //     if(res.statusCode !== 201) {
+    //         notification.error({
+    //             message: "Error to regenerate active code",
+    //             description: res.error
+    //         })
+    //         return
+    //     }
+    //     router.push(`/verify/${res?.data?.user?._id}`)
+    // }
     const onFinish = async (values: any) => {
         setLoading(true)
         const {email, password} = values
@@ -21,22 +58,9 @@ const Login = () => {
                 description: res.error
             })
             if(res?.code === 2) {
-                const res = await sendRequest<IBackendRes<ResendCodeRes>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/resend-code`,
-                    method: 'POST',
-                    body: {
-                        email
-                    }
-                })
-                if(res.statusCode !== 201) {
-                    notification.error({
-                        message: "Error to regenerate active code",
-                        description: res.error
-                    })
-                }
-                router.push(`/verify/${res?.data?.user?._id}`)
+                setUserEmail(email)
+                handleOpenActiveModal(true)
             }
-            setLoading(false)
             return
         }
         notification.success({
@@ -57,6 +81,7 @@ const Login = () => {
                     borderRadius: "5px"
                 }}>
                     <legend>Login</legend>
+                    
                     <Form
                         name="basic"
                         onFinish={onFinish}
@@ -102,6 +127,19 @@ const Login = () => {
                         Not have an account? <Link href={"/auth/register"}>Register here</Link>
                     </div>
                 </fieldset>
+                {/* <BaseModal 
+                    isOpen={isOpenActiveModal} 
+                    title='Activate' 
+                    setStateOpen={handleOpenActiveModal}
+                    hideOpenButton={true}
+                    items={items}
+                    onSubmit={handleResendCode}
+                /> */}
+                <ModalReactive
+                    isModalOpen={isOpenActiveModal}
+                    setIsModalOpen={handleOpenActiveModal}
+                    userEmail={userEmail}
+                />
             </Col>
         </Row>
     )
