@@ -35,6 +35,7 @@ const ManageUserPage = async ({
         description: res.error,
       });   
     } 
+    
     return (
         <div>
             <UserTable 

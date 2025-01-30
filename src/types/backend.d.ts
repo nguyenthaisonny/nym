@@ -23,13 +23,17 @@ declare global {
         meta: MetaPagnigate,
         results: T[]
     }
-
+    
+    type DataIndex = keyof ResultPagnigate;
     interface ResultPagnigate {
-        name?: string,
-        email?: string,
-        role?: string,
+        _id: string
+        name: string,
+        email: string,
+        role: string,
         phone?: string
         address?: string
+        isActive: string
+        editable: boolean
     }
 
     interface MetaPagnigate {
@@ -56,7 +60,6 @@ declare global {
 
     interface IRegister {
         user: UserResRegister
-        access_token: string
     }
 
     interface ResendCodeRes {

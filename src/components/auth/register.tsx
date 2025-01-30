@@ -19,6 +19,8 @@ const Register = () => {
                 name, email, password
             }
         })
+        console.log("res", res);
+        
         if(res?.data) {
             router.push(`/verify/${res?.data?.user?._id}`)
             setLoading(false)

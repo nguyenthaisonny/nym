@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { authenticate } from '@/utils/actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import ModalReactive from '../modal/auth/modal.reactive';
-import ModalChangePassword from '../modal/auth/modal.change.password';
+import ModalReactive from '../modal/auth/ModalReactive';
+import ModalChangePassword from '../modal/auth/ModalChangePassword';
 
 
 
@@ -43,7 +43,6 @@ const Login = () => {
       description: res.error,
     });
     router.push("/dashboard");
-    setLoading(false);
   };
 
   return (

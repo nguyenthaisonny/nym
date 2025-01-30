@@ -1,11 +1,11 @@
 
-import AdminCard from "@/components/admin/admin.card";
+import UserTableTest from "@/components/admin/user.table.test1";
 
 const DashboardPage = () => {
 
     return (
         <div>
-            <AdminCard />
+            <UserTableTest/>
         </div>
     )
 }
