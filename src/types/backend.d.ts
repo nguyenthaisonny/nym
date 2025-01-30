@@ -33,7 +33,8 @@ declare global {
         phone?: string
         address?: string
         isActive: string
-        editable: boolean
+        editable?: boolean
+        actions?: string
     }
 
     interface MetaPagnigate {

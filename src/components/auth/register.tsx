@@ -5,7 +5,6 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
-
 const Register = () => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
@@ -19,8 +18,6 @@ const Register = () => {
                 name, email, password
             }
         })
-        console.log("res", res);
-        
         if(res?.data) {
             router.push(`/verify/${res?.data?.user?._id}`)
             setLoading(false)
@@ -31,9 +28,7 @@ const Register = () => {
             message: "Register error",
             description: res?.message
         })
-        
     };
-
     return (
         <Row justify={"center"} style={{ marginTop: "30px" }}>
             <Col xs={24} md={16} lg={8}>

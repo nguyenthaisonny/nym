@@ -4,6 +4,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 import '@/app/globals.css';
 import NextAuthWrapper from "@/library/next.auth.wrapper";
+import { AppContextProvider } from "@/library/contexts/app.context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextAuthWrapper>
-          <AntdRegistry>
-            {children}
-          </AntdRegistry>
-        </NextAuthWrapper>
+        <AppContextProvider>
+          <NextAuthWrapper>
+            <AntdRegistry>
+              {children}
+            </AntdRegistry>
+          </NextAuthWrapper>
+        </AppContextProvider>
 
       </body>
     </html>
