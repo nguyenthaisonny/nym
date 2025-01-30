@@ -33,13 +33,13 @@ const ManageUserPage = async ({
         message: "Error fetching users",
         description: res.error,
       });   
-    } 
-    
+    }
+    const dataSource = res?.data?.results.map((data, key) => ({...data, key})) 
     return (
         <div>
             <UserTable 
                 meta={res?.data?.meta ?? { current: 1, pageSize: 10, pages: 0, total: 0 }}
-                dataSource={res?.data?.results ?? []}
+                dataSource={dataSource ?? []}
             />
         </div>
     )
