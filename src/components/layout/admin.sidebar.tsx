@@ -1,29 +1,24 @@
 'use client'
 import Layout from "antd/es/layout";
 import Menu from "antd/es/menu";
-import {
-    AppstoreOutlined,
-    MailOutlined,
-    SettingOutlined,
-    TeamOutlined,
-
-} from '@ant-design/icons';
-import React, { useContext } from 'react';
-import { AdminContext, useAdminContext } from "@/library/contexts/admin.context";
-import type { MenuProps } from 'antd';
-import Link from 'next/link'
+import React from 'react';
+import { useAdminContext } from "@/library/contexts/admin.context";
 import { sidebarAminItems } from "@/constants/admin.constants";
+import { usePathname } from "next/navigation";
 
 const AdminSideBar = () => {
     const { Sider } = Layout;
     const { collapseMenu } = useAdminContext()!;
+    const path = usePathname();
+    const pathElements = path.split("/");
+    const currentKey = pathElements[pathElements.length - 1]
     return (
         <Sider
             collapsed={collapseMenu}
         >
             <Menu
                 mode="inline"
-                defaultSelectedKeys={['dashboard']}
+                defaultSelectedKeys={[currentKey]}
                 theme="dark"
                 items={sidebarAminItems}
                 style={{ height: '100vh' }}

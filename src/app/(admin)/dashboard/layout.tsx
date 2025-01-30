@@ -4,7 +4,6 @@ import AdminFooter from '@/components/layout/admin.footer';
 import AdminHeader from '@/components/layout/admin.header';
 import AdminSideBar from '@/components/layout/admin.sidebar';
 import { AdminContextProvider } from '@/library/contexts/admin.context';
-import { useSession } from 'next-auth/react';
 
 const AdminLayout = async ({
     children,

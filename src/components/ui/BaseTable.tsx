@@ -205,69 +205,6 @@ const BaseTable = ({
         })
       ] : 
       columns)
-    // const handleDeleteUser = async (id: string) => {
-    //     const res = await sendRequest<IBackendRes<IModelPaginate<ResultPagnigate>>>({
-    //         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${id}`,
-    //         method: 'DELETE',
-    //         headers: {
-    //             Authorization: `Bearer ${session?.data?.user?.access_token}`,
-    //         },
-    //     });
-    
-    //     if (!res?.data) {
-    //         notification.error({
-    //             message: "Error deleting user",
-    //             description: res.error,
-    //         });
-    //     } else {
-    //         notification.success({
-    //             message: "User deleted successfully",
-    //         });
-    
-    //         const updatedRes = await sendRequest<IBackendRes<IModelPaginate<ResultPagnigate>>>({
-    //             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
-    //             method: 'GET',
-    //             headers: {
-    //                 Authorization: `Bearer ${session?.data?.user?.access_token}`,
-    //             },
-    //             queryParams: {
-    //                 current: 1, 
-    //                 pageSize: 10,
-    //             },
-    //             nextOption: {
-    //                 next: { tag: ['list-users'] },
-    //             },
-    //         });
-    
-    //         if (updatedRes?.data) {
-    //             setDataSourceTable(updatedRes.data.results ?? []);
-    //         } else {
-    //             notification.error({
-    //                 message: "Error fetching updated user list",
-    //                 description: updatedRes.error,
-    //             });
-    //         }
-    //     }
-    // };
-    
-
-    // const handleChangePagnigattion = async (e: any) => {
-    //     const res = await sendRequest<IBackendRes<IModelPaginate<ResultPagnigate>>>({
-    //             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
-    //             method: 'GET',
-    //             headers: {
-    //                Authorization: `Bearer ${session?.data?.user?.access_token}`
-    //             },
-    //             queryParams: {
-    //                 current: e.current,
-    //                 pageSize: e.pageSize
-    //             },
-    //             nextOption: {
-    //                 next: {tag: ['list-users']}
-    //             }
-    //         })
-    //     setDataSourceTable(res?.data?.results ?? [])
-    // }
 
      const mergedColumns : any= columnsTable.map((col) => {
         if (!col.editable || !col.hasSearch) {

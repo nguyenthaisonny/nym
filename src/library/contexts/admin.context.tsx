@@ -1,7 +1,5 @@
 'use client'
-
 import { createContext, useContext, useState } from "react";
-
 interface IAdminContext {
     collapseMenu: boolean;
     setCollapseMenu: (v: boolean) => void;

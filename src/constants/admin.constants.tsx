@@ -4,7 +4,6 @@ import Link from "next/link";
 
 type MenuItem = Required<MenuProps>['items'][number];
 export const sidebarAminItems: MenuItem[] = [
-
     {
         key: 'grp',
         label: 'nym-application',
@@ -16,7 +15,7 @@ export const sidebarAminItems: MenuItem[] = [
                 icon: <AppstoreOutlined />,
             },
             {
-                key: "users",
+                key: "user",
                 label: <Link href={"/dashboard/user"}>Manage Users</Link>,
                 icon: <TeamOutlined />,
             },

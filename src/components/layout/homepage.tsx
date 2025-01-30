@@ -1,5 +1,4 @@
 'use client'
-
 import { CrownOutlined } from "@ant-design/icons"
 import { Result } from "antd"
 

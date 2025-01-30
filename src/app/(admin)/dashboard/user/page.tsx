@@ -1,8 +1,7 @@
 import { auth } from "@/auth";
 import UserTable from "@/components/admin/user.table";
-import { IUser } from "@/types/next-auth";
 import { sendRequest } from "@/utils/api";
-import { message, notification } from "antd";
+import { notification } from "antd";
 
 const ManageUserPage = async ({
     params,

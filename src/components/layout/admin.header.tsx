@@ -1,12 +1,11 @@
 'use client'
-import { AdminContext, useAdminContext } from '@/library/contexts/admin.context';
+import { useAdminContext } from '@/library/contexts/admin.context';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
-import { useContext } from 'react';
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 
 const AdminHeader = ({session}: {session: any}) => {
     const { Header } = Layout;
