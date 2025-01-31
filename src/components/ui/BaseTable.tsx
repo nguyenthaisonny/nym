@@ -2,16 +2,11 @@
 import { EditableCell } from "@/constants/antd/table.constants"
 import { useAppContext } from "@/library/contexts/app.context"
 import { OptionsColumn } from "@/types/antd/table"
-import { sendRequest } from "@/utils/api"
-import { DeleteFilled, DeleteOutlined, DeleteTwoTone, EditFilled, EditOutlined, EditTwoTone, SearchOutlined } from "@ant-design/icons"
-import { Button, Form, Input, InputNumber, InputRef, notification, Popconfirm, Space, Table, TableColumnsType, TableColumnType, TableProps, Typography } from "antd"
-import form from "antd/es/form"
+import { DeleteTwoTone, EditTwoTone, SearchOutlined } from "@ant-design/icons"
+import { Button, Form, Input, InputRef, Popconfirm, Space, Table,TableColumnType, Typography } from "antd"
 import {  FilterDropdownProps } from "antd/es/table/interface"
-import { useSession } from "next-auth/react"
 import { useRef, useState } from "react"
 import Highlighter from 'react-highlight-words';
-
-
 interface IDefaultColumn {
     title: string
     dataIndex: DataIndex,
@@ -26,8 +21,6 @@ interface IBaseTable {
   handleSave?: (id: string, updatedData: any) => Promise<void>;
   handleDelete?: (id: string) => Promise<void>;
 }
-
-
 const BaseTable = ({
     meta,
     dataSource,
@@ -57,7 +50,7 @@ const BaseTable = ({
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
     const [editingKey, setEditingKey] = useState('');
-    const {current, pageSize, pages, total} = meta
+    const {pageSize, total} = meta
     const {currentPage, setCurrentPage} = useAppContext()!;
 
     const isEditing = (record: ResultPagnigate) => record._id === editingKey;
@@ -97,7 +90,6 @@ const BaseTable = ({
               onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
               style={{ marginBottom: 8, display: 'block' }}
             />
-            <h1>{dataIndex}</h1>
             <Space>
               <Button
                 type="primary"
@@ -205,7 +197,7 @@ const BaseTable = ({
         })
       ] : 
       columns)
-
+      
      const mergedColumns : any= columnsTable.map((col) => {
         if (!col.editable || !col.hasSearch) {
           return col;
@@ -228,17 +220,8 @@ const BaseTable = ({
           ...getColumnSearchProps(col.dataIndex)
         }
       })
-      
     return (
         <Form form={form} component={false}>
-            <div style={{
-                display: "flex", justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 20
-            }}>
-                <span>Manager Users</span>
-                <Button>Create User</Button>
-            </div>
             <Table<ResultPagnigate>
                 components={{
                     body: { cell: EditableCell },

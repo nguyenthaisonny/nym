@@ -168,7 +168,7 @@ const ModalReactive = ({ isModalOpen, setIsModalOpen, userEmail } : ModalReactiv
 
                 {current === 2 &&
                     <div style={{ margin: "20px 0" }}>
-                        <p>Tải khoản của bạn đã được kích hoạt thành công. Vui lòng đăng nhập lại</p>
+                        <p>Your account has been actived successfully, please login again</p>
                     </div>
                 }
             </Modal>

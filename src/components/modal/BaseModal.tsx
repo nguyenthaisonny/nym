@@ -1,88 +1,72 @@
-import React, { useState } from 'react';
-import { Button, Col, Divider, Form, Input, Modal, Row } from 'antd';
+'use client'
+import { useHasMounted } from "@/utils/customHook";
+import { Button, Form, Input, Modal, notification, Steps } from "antd";
+import { SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
+import { useEffect, useState } from "react";
+import { sendRequest } from "@/utils/api";
 
-interface BaseModalProps {
-    title?: string;
-    isOpen?: boolean;
-    hideOpenButton?: boolean;
-    items?: itemInput[];
-    setStateOpen?: (status: boolean) => void; 
-    onSubmit?: (data: any) => Promise<void>       
+interface IBaseModalProps {
+    title?: string
+    isModalOpen: boolean
+    setIsModalOpen: (status: boolean) => void
+    items?: itemInput[]
+    onFinish?: (value: any) => Promise<void>
 }
-
-const BaseModal = ({
-    title = 'BaseModal',
-    isOpen = false,
-    hideOpenButton = false,
-    items = [],
-    setStateOpen = () => {},  
-    onSubmit = async () => {},      
-}: BaseModalProps) => {
-const [loading, setLoading] = useState(false)
-  const showModal = () => {
-    setStateOpen(true); 
-  };
-
-  const handleCancel = () => {
-    setStateOpen(false); 
-  };
-
-  const onFinish = async (values: any) => {
-    setLoading(true)
-    await onSubmit(values) 
-    setStateOpen(false);
-  };
-
-  return (
-    <>
-        {!hideOpenButton ? (
-            <Button type="primary" onClick={showModal}>
-                Open Modal
-            </Button>
-        ) : null}
-        <Row justify={"center"} style={{ marginTop: "30px" }}>
-            <Col xs={24} md={16} lg={8}>
-                <Modal 
-                    title={title} 
-                    open={isOpen}
-                    footer={null}
-                    onCancel={handleCancel}
+const BaseModal = ({ 
+    isModalOpen,
+     setIsModalOpen, 
+     items = [],
+     title = "Base Modal",
+     onFinish = async () => {}
+    } : 
+    IBaseModalProps) => {
+    const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false)
+    const hasMounted = useHasMounted();
+    if (!hasMounted) return <></>;
+    const handleFinish = async (value: any) => {
+        setLoading(true)
+        await onFinish(value);
+        setLoading(false)
+    }
+    
+    return (
+        <>
+            <Modal
+                title={title}
+                open={isModalOpen}
+                onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)}
+                maskClosable={false}
+                footer={null}
+            >
+                <Form
+                    name="verify"
+                    autoComplete="off"
+                    layout='vertical'
+                    form={form}
+                    onFinish={handleFinish}
                 >
-                    <fieldset style={{
-                        padding: "15px",
-                        margin: "5px",
-                        border: "1px solid #ccc",
-                        borderRadius: "5px"
-                    }}>
-                        <Form
-                            name="basic"
-                            onFinish={onFinish}
-                            autoComplete="off"
-                            layout="vertical"
+                    {items.map(({name, label, rules, type, hasFeedback}) => (
+                        <Form.Item
+                            key={name}
+                            label={label}
+                            name={name}
+                            rules={rules}
+                            hasFeedback={hasFeedback}
                         >
-                            {items.map(({ label, name, rules }) => (
-                                <Form.Item
-                                    key={name}
-                                    label={label}
-                                    name={name}
-                                    rules={rules}
-                                >
-                                    <Input />
-                                </Form.Item>
-                            ))}
-                            <Divider />
-                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Button loading={loading} type="primary" htmlType="submit">
-                                    Resend
-                                </Button>
-                            </div>
-                        </Form>
-                    </fieldset>
-                </Modal>
-            </Col>
-        </Row>
-    </>
-  );
-};
+                            <Input type={type}/>
+                        </Form.Item>
+                    ))}
+                    <Form.Item>
+                        <Button loading={loading} type="primary" htmlType="submit">
+                            Create
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+        </>
+    )
+}
 
 export default BaseModal;

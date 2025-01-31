@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { authenticate } from '@/utils/actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import ModalReactive from '../modal/auth/ModalReactive';
-import ModalChangePassword from '../modal/auth/ModalChangePassword';
+import ModalReactive from '../modal/auth/ReactiveModal';
+import ModalChangePassword from '../modal/auth/ChangePasswordModal';
 
 
 

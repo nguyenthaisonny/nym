@@ -12,7 +12,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 interface OptionsColumn<T> extends ColumnType<T> {
     editable?: boolean
     hasSearch?: boolean
-    dataIndex: DataIndex,
+    dataIndex: DataIndex
 }
 type DataIndex = keyof ResultPagnigate;
   

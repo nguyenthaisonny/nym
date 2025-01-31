@@ -22,7 +22,6 @@ const AdminLayout = async ({
                     <AdminContent>
                         {children}
                     </AdminContent>
-                    <AdminFooter />
                 </div>
             </div>
         </AdminContextProvider>

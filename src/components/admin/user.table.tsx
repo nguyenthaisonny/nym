@@ -1,18 +1,13 @@
 'use client'
-import { EditableCell } from "@/constants/antd/table.constants"
-import { OptionsColumn } from "@/types/antd/table"
-import { sendRequest } from "@/utils/api"
-import { DeleteFilled, DeleteOutlined, DeleteTwoTone, EditFilled, EditOutlined, EditTwoTone, SearchOutlined } from "@ant-design/icons"
-import { Button, Form, Input, InputNumber, InputRef, notification, Popconfirm, Space, Table, TableColumnsType, TableColumnType, TableProps, Typography } from "antd"
-import form from "antd/es/form"
-import {  FilterDropdownProps } from "antd/es/table/interface"
-import { useSession } from "next-auth/react"
-import { useRef, useState } from "react"
-import Highlighter from 'react-highlight-words';
-import BaseTable from "../ui/BaseTable"
-import { columns } from '@/constants/user.constants';
-import { useAppContext } from "@/library/contexts/app.context"
 
+import { sendRequest } from "@/utils/api"
+import { Button, message, notification, } from "antd"
+import { useSession } from "next-auth/react"
+import { useState } from "react"
+import BaseTable from "@/components/ui/BaseTable"
+import { columns, createUserInputs } from '@/constants/user.constants';
+import { useAppContext } from "@/library/contexts/app.context"
+import CreateUserModal from "../modal/user/CreateUserModal"
 
 interface IUserTable {
   meta: MetaPagnigate,
@@ -27,18 +22,19 @@ const UserTable = ({
      const {currentPage} = useAppContext()!;
      const {pageSize} = meta
     const [dataSourceTable, setDataSourceTable] = useState<ResultPagnigate[]>(dataSource)
+    const [openCreateUserModal, setOpenCreateUserModal] = useState(false)
     const handleOnSave = async (id: string, updatedData: any) => {
-      const res = await sendRequest<IBackendRes<IModelPaginate<ResultPagnigate>>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
-          method: 'PATCH',
-          headers: {
-              Authorization: `Bearer ${session?.data?.user?.access_token}`,
-          },
-          body: {
-              _id: id,
-              ...updatedData
-          }
-      });
+        const res = await sendRequest<IBackendRes<IModelPaginate<ResultPagnigate>>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${session?.data?.user?.access_token}`,
+            },
+            body: {
+                _id: id,
+                ...updatedData
+            }
+        });
       if (!res?.data) {
           notification.error({
               message: "Error Updating user",
@@ -115,16 +111,60 @@ const UserTable = ({
             })
         setDataSourceTable(res?.data?.results ?? [])
     }
+    const handleCreateUser = () => {
+        setOpenCreateUserModal(true)
+    }
+    const handleSubmitUser = async (value: any) => {
+        const { confirmPassword, ...dataSubmit} = value
+        const res = await sendRequest<IBackendRes<IModelPaginate<ResultPagnigate>>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${session?.data?.user?.access_token}`,
+            },
+            body: {
+                ...dataSubmit
+            }
+        });
+      if (!res?.data) {
+          notification.error({
+              message: "Error Creating user",
+              description: res.message,
+          });
+          return
+      }
+      fetchUsers(currentPage, pageSize);
+      notification.success({
+        message: "User created successfully",
+      });
+      setOpenCreateUserModal(false);
+    }
     return (
-      <BaseTable
-        meta={meta}
-        dataSource={dataSourceTable}
-        columns={columns}
-        showActions
-        handleChangePagination={handleOnChangePagination}
-        handleSave={handleOnSave}
-        handleDelete={handleOnDelete}
-    />
+        <>
+            <div style={{
+                display: "flex", justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 20
+            }}>
+                <span>Manager Users</span>
+                <Button onClick={handleCreateUser}>Create User</Button>
+            </div>
+            <BaseTable
+                meta={meta}
+                dataSource={dataSourceTable}
+                columns={columns}
+                showActions
+                handleChangePagination={handleOnChangePagination}
+                handleSave={handleOnSave}
+                handleDelete={handleOnDelete}
+            />
+            <CreateUserModal 
+                isModalOpen={openCreateUserModal} 
+                setIsModalOpen={setOpenCreateUserModal} 
+                items={createUserInputs}
+                onFinish={handleSubmitUser}
+            />
+        </>
     )
 }
 

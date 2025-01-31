@@ -34,7 +34,9 @@ const ManageUserPage = async ({
         description: res.error,
       });   
     }
-    const dataSource = res?.data?.results.map((data, key) => ({...data, key})) 
+    const dataSource = res?.data?.results.map((data, key) => {
+        return ({...data, key})
+    }) 
     return (
         <div>
             <UserTable 
