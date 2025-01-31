@@ -1,13 +1,13 @@
 'use client'
 
 import { sendRequest } from "@/utils/api"
-import { Button, message, notification, } from "antd"
-import { useSession } from "next-auth/react"
+import { Button, notification, } from "antd"
 import { useState } from "react"
 import BaseTable from "@/components/ui/BaseTable"
 import { columns, createUserInputs } from '@/constants/user.constants';
 import { useAppContext } from "@/library/contexts/app.context"
 import CreateUserModal from "../modal/user/CreateUserModal"
+import useUser from "@/hooks/useUser"
 
 interface IUserTable {
   meta: MetaPagnigate,
@@ -18,7 +18,7 @@ const UserTable = ({
     meta,
     dataSource,
 }: IUserTable) => {
-     const session = useSession()
+    const  {accessToken} = useUser()
      const {currentPage} = useAppContext()!;
      const {pageSize} = meta
     const [dataSourceTable, setDataSourceTable] = useState<ResultPagnigate[]>(dataSource)
@@ -28,7 +28,7 @@ const UserTable = ({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
             method: 'PATCH',
             headers: {
-                Authorization: `Bearer ${session?.data?.user?.access_token}`,
+                Authorization: `Bearer ${accessToken}`,
             },
             body: {
                 _id: id,
@@ -52,7 +52,7 @@ const UserTable = ({
              url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
              method: 'GET',
              headers: {
-                 Authorization: `Bearer ${session?.data?.user?.access_token}`,
+                 Authorization: `Bearer ${accessToken}`,
              },
              queryParams: {
                  current, 
@@ -76,7 +76,7 @@ const UserTable = ({
           url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${id}`,
           method: 'DELETE',
           headers: {
-              Authorization: `Bearer ${session?.data?.user?.access_token}`,
+              Authorization: `Bearer ${accessToken}`,
           },
       });
   
@@ -99,7 +99,7 @@ const UserTable = ({
                 url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
                 method: 'GET',
                 headers: {
-                   Authorization: `Bearer ${session?.data?.user?.access_token}`
+                   Authorization: `Bearer ${accessToken}`
                 },
                 queryParams: {
                     current: e.current,
@@ -120,7 +120,7 @@ const UserTable = ({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${session?.data?.user?.access_token}`,
+                Authorization: `Bearer ${accessToken}`,
             },
             body: {
                 ...dataSubmit
