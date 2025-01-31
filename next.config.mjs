@@ -1,3 +1,6 @@
 export const nextConfig = {
-  reactStrictMode: true,
+  output: "export",
+  inmages: {
+    unoptimized: true,
+  }
 };
