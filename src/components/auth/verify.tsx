@@ -106,13 +106,3 @@ const Verify = ({
 };
 
 export default Verify;
-
-// Generate static paths for the dynamic route
-export async function generateStaticParams() {
-    // Fetch the list of ids from your API or define them statically
-    const ids = ['id1', 'id2', 'id3']; // Replace with actual ids
-
-    return ids.map(id => ({
-        id: id
-    }));
-}
