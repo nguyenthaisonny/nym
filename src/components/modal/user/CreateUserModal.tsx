@@ -18,10 +18,6 @@ const CreateUserModal = ({
     items = [],
     onFinish = async () => {} 
 } : ICreaUserModalProps) => {
-    const [current, setCurrent] = useState(0);
-    const [form] = Form.useForm();
-    const [userId, setUserId] = useState("");
-    const [loading, setLoading] = useState(false)
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
     return (
