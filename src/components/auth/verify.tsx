@@ -5,18 +5,18 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
+
 const Verify = ({
     id = "id"
-}:
-{
-id: string
-}
-) => {
-    const [loading, setLoading] = useState(false)
-    const router = useRouter()
+}: {
+    id: string
+}) => {
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
     const onFinish = async (values: any) => {
-        setLoading(true)
-        const {id, code} = values
+        setLoading(true);
+        const { id, code } = values;
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/check-code`,
             method: 'POST',
@@ -24,22 +24,21 @@ id: string
                 _id: id,
                 code
             }
-        })
-        if(res?.statusCode === 201) {
-            // authenticate()
-            router.push('/auth/login')
+        });
+        if (res?.statusCode === 201) {
+            router.push('/auth/login');
             notification.success({
                 message: "Activate successfully",
                 description: res?.message
-            })
-            setLoading(false)
+            });
+            setLoading(false);
             return;
         }
-        setLoading(false)
+        setLoading(false);
         notification.error({
             message: "Verify error",
             description: res?.message
-        })
+        });
     };
 
     return (
@@ -70,16 +69,12 @@ id: string
                             initialValue={id}
                             hidden
                         >
-                            <Input disabled/>
+                            <Input disabled />
                         </Form.Item>
-                            <div 
-                                style={{
-                                    textAlign: 'center'
-                                }}
-                            >
-                                A code has been seen to your email, please check it 😊.
-                            </div>
-                            <Divider/>
+                        <div style={{ textAlign: 'center' }}>
+                            A code has been sent to your email, please check it 😊.
+                        </div>
+                        <Divider />
                         <Form.Item
                             label="Code"
                             name="code"
@@ -93,8 +88,7 @@ id: string
                             <Input.Password />
                         </Form.Item>
 
-                        <Form.Item
-                        >
+                        <Form.Item>
                             <Button loading={loading} type="primary" htmlType="submit">
                                 Submit
                             </Button>
@@ -105,12 +99,20 @@ id: string
                     <div style={{ textAlign: "center" }}>
                         Đã có tài khoản? <Link href={"/auth/login"}>Login</Link>
                     </div>
-
                 </fieldset>
             </Col>
         </Row>
-
-    )
-}
+    );
+};
 
 export default Verify;
+
+// Generate static paths for the dynamic route
+export async function generateStaticParams() {
+    // Fetch the list of ids from your API or define them statically
+    const ids = ['id1', 'id2', 'id3']; // Replace with actual ids
+
+    return ids.map(id => ({
+        id: id
+    }));
+}
