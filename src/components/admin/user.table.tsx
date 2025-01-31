@@ -19,8 +19,8 @@ const UserTable = ({
     dataSource,
 }: IUserTable) => {
     const  {accessToken} = useUser()
-     const {currentPage} = useAppContext()!;
-     const {pageSize} = meta
+    const {currentPage} = useAppContext()!;
+    const {pageSize} = meta
     const [dataSourceTable, setDataSourceTable] = useState<ResultPagnigate[]>(dataSource)
     const [openCreateUserModal, setOpenCreateUserModal] = useState(false)
     const handleOnSave = async (id: string, updatedData: any) => {
@@ -38,7 +38,7 @@ const UserTable = ({
       if (!res?.data) {
           notification.error({
               message: "Error Updating user",
-              description: res.error,
+              description: res.message,
           });
           return
       }

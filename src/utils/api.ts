@@ -48,7 +48,6 @@ export const sendRequestFile = async <T>(props: IRequest): Promise<T> => {
         headers = {},
         nextOption = {}
     } = props;
-
     // Setting up axios config for file upload
     const config: AxiosRequestConfig = {
         method: method,
@@ -57,11 +56,9 @@ export const sendRequestFile = async <T>(props: IRequest): Promise<T> => {
         withCredentials: useCredentials,
         ...nextOption
     };
-
     if (body) {
         config.data = body; // For files, body should be FormData or similar
     }
-
     try {
         const response = await axios(url, config);
         return response.data as T;
