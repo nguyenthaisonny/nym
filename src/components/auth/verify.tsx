@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 const Verify = ({
-    id
+    id = "id"
 }:
 {
 id: string
